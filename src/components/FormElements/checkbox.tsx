@@ -10,6 +10,8 @@ type PropsType = {
   minimal?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   radius?: "default" | "md";
+  checked?: boolean;
+  disabled?: boolean;
 };
 
 export function Checkbox({
@@ -20,6 +22,8 @@ export function Checkbox({
   minimal,
   onChange,
   radius,
+  checked,
+  disabled,
 }: PropsType) {
   const id = useId();
 
@@ -30,6 +34,7 @@ export function Checkbox({
         className={cn(
           "flex cursor-pointer select-none items-center",
           !minimal && "text-body-sm font-medium",
+          disabled && "cursor-not-allowed opacity-60"
         )}
       >
         <div className="relative">
@@ -39,6 +44,8 @@ export function Checkbox({
             name={name}
             id={id}
             className="peer sr-only"
+            checked={checked}
+            disabled={disabled}
           />
 
           <div
@@ -49,17 +56,30 @@ export function Checkbox({
                 : "peer-checked:bg-gray-2 dark:peer-checked:bg-transparent",
               minimal && "mr-3 border-stroke dark:border-dark-3",
               radius === "md" && "rounded-md",
+              disabled &&
+                "border-dark-4 bg-dark-2 opacity-50 dark:border-dark-5 dark:bg-dark-3"
             )}
           >
             {!withIcon && (
-              <span className="hidden size-2.5 rounded-sm bg-primary" />
+              <span
+                className={cn(
+                  "hidden size-2.5 rounded-sm bg-primary",
+                  checked && "block"
+                )}
+              />
             )}
 
             {withIcon === "check" && (
-              <CheckIcon className="hidden text-primary" />
+              <CheckIcon
+                className={cn("hidden text-primary", checked && "block")}
+              />
             )}
 
-            {withIcon === "x" && <XIcon className="hidden text-primary" />}
+            {withIcon === "x" && (
+              <XIcon
+                className={cn("hidden text-primary", checked && "block")}
+              />
+            )}
           </div>
         </div>
         <span>{label}</span>
