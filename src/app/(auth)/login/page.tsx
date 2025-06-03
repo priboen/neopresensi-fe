@@ -37,16 +37,15 @@ export default function LoginPage() {
                 />
               </Link>
               <p className="mb-3 text-xl font-medium text-dark dark:text-white">
-                Sign in to your account
+                Masuk ke Akun Anda
               </p>
 
               <h1 className="mb-4 text-2xl font-bold text-dark dark:text-white sm:text-heading-3">
-                Welcome Back!
+                Selamat Datang!
               </h1>
 
               <p className="w-full max-w-[375px] font-medium text-dark-4 dark:text-dark-6">
-                Please sign in to your account by completing the necessary
-                fields below
+                Silahkan masuk ke akun Anda untuk melanjutkan.
               </p>
 
               <div className="mt-31">
