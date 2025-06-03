@@ -1,10 +1,10 @@
 "use client";
 import { PasswordIcon, UserIcon } from "@/assets/icons";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputGroup from "../FormElements/InputGroup";
 import { Checkbox } from "../FormElements/checkbox";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const AUTH_TOKEN_COOKIE_NAME =
   process.env.NEXT_PUBLIC_AUTH_TOKEN_COOKIE_NAME || "fallbackAuthCookieName";
@@ -22,6 +22,20 @@ export default function LoginWithPassword() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const errorParam = searchParams.get("error");
+    if (errorParam) {
+      if (errorParam === "session_expired") {
+        setError("Sesi Anda telah berakhir. Silakan login kembali.");
+      } else if (errorParam === "config_error") {
+        setError("Terjadi kesalahan konfigurasi. Hubungi administrator.");
+      } else {
+        setError("Terjadi kesalahan. Silakan coba lagi.");
+      }
+    }
+  }, [searchParams, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
