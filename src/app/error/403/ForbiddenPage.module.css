@@ -1,0 +1,267 @@
+/* src/app/403/ForbiddenPage.module.css */
+
+.forbiddenPageContainer {
+  background-color: #1c2127;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+  box-sizing: border-box;
+  /* Font akan diterapkan oleh poppins.className dari JSX */
+}
+
+.message {
+  /* Font diwarisi dari .forbiddenPageContainer (Poppins) */
+  font-size: 30px;
+  color: white;
+  font-weight: 500;
+  position: absolute;
+  top: 15%; /* Sesuaikan posisi, mungkin lebih baik relatif ke viewport/container */
+  left: 40px;
+  text-align: left;
+  z-index: 10;
+}
+
+.message2 {
+  /* Font diwarisi dari .forbiddenPageContainer (Poppins) */
+  font-size: 18px;
+  color: white;
+  font-weight: 300;
+  width: 360px;
+  position: absolute;
+  top: calc(15% + 50px); /* Sesuaikan posisi, di bawah .message */
+  left: 40px;
+  text-align: left;
+  z-index: 10;
+}
+
+.mainContentContainer {
+  /* Dulu .container di CSS asli */
+  /* Kita bisa membiarkannya diposisikan oleh flexbox dari parent, atau posisikan absolut */
+  /* Jika diposisikan oleh flexbox: */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Jika ingin absolut seperti CSS asli: */
+  /* position: absolute; */
+  /* right: 30px; */
+  /* top: 50%; */
+  /* transform: translateY(-50%); */
+  margin-top: 80px; /* Beri jarak jika pesan ada di atas */
+}
+
+.neon {
+  /* Font akan diterapkan oleh varelaRound.className dari JSX */
+  text-align: center;
+  width: 300px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  font-size: 90px;
+  color: #5be0b3;
+  letter-spacing: 3px;
+  text-shadow: 0 0 5px #6eecc1; /* Disederhanakan sedikit dari keyframes untuk base */
+  animation: flux 2s linear infinite;
+}
+
+.doorFrame {
+  height: 495px;
+  width: 295px;
+  border-radius: 90px 90px 0 0;
+  background-color: #8594a5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; /* Sedikit jarak dari teks neon */
+}
+
+.door {
+  height: 450px;
+  width: 250px;
+  border-radius: 70px 70px 0 0;
+  background-color: #a0aec0;
+  position: relative; /* Konteks untuk elemen di dalam pintu */
+}
+
+.window {
+  height: 40px;
+  width: 130px;
+  background-color: #1c2127;
+  border-radius: 3px;
+  margin: 80px auto; /* Pusatkan window di dalam door */
+  position: relative; /* Konteks untuk mata dan daun */
+  overflow: hidden; /* Agar animasi daun tetap di dalam window */
+}
+
+/* Gaya untuk kontainer tombol */
+.actionsContainer {
+  display: flex;
+  flex-direction: row; /* Atau column jika ingin tombol bertumpuk */
+  gap: 20px; /* Jarak antar tombol */
+  margin-top: 50px; /* Jarak dari elemen pintu animasi */
+  z-index: 10; /* Pastikan tombol di atas elemen lain jika ada tumpang tindih */
+}
+
+/* Gaya dasar untuk tombol aksi (Link dan button) */
+.actionButton {
+  padding: 12px 25px;
+  background-color: #5be0b3; /* Warna utama, bisa disesuaikan */
+  color: #1c2127; /* Warna teks, bisa disesuaikan */
+  text-decoration: none; /* Untuk Link */
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  border: none; /* Untuk button */
+  cursor: pointer; /* Untuk button */
+  /* Font diwarisi dari .forbiddenPageContainer (Poppins) */
+  display: inline-flex; /* Agar padding dan alignment bekerja baik */
+  align-items: center;
+  justify-content: center;
+}
+
+.actionButton:hover {
+  background-color: #6eecc1; /* Warna hover, bisa disesuaikan */
+  transform: translateY(-2px); /* Efek angkat sedikit saat hover */
+}
+
+/* Gaya spesifik untuk tombol logout */
+.logoutButton {
+  background-color: #dc3545; /* Warna merah untuk logout, sebagai contoh */
+  color: white;
+}
+
+.logoutButton:hover {
+  background-color: #c82333; /* Warna merah lebih gelap saat hover */
+}
+
+.eye {
+  top: 15px;
+  left: 25px;
+  height: 5px;
+  width: 15px;
+  border-radius: 50%;
+  background-color: white;
+  animation: eye 7s ease-in-out infinite;
+  position: absolute;
+}
+
+.eye2Modifier {
+  /* Class tambahan untuk mata kedua */
+  left: 65px;
+}
+
+.leaf {
+  height: 40px;
+  width: 130px;
+  background-color: #8594a5;
+  border-radius: 3px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: leaf 7s infinite;
+  transform-origin: right;
+}
+
+.handle {
+  height: 8px;
+  width: 50px;
+  border-radius: 4px;
+  background-color: #ebf3fc;
+  position: absolute;
+  top: 250px; /* Disesuaikan dari margin-top ke top relatif ke .door */
+  left: 30px; /* Disesuaikan dari margin-left ke left relatif ke .door */
+}
+
+.rectangle {
+  height: 70px;
+  width: 25px;
+  background-color: #cbd8e6;
+  border-radius: 4px;
+  position: absolute;
+  top: 220px; /* Disesuaikan dari margin-top ke top relatif ke .door */
+  left: 20px; /* Disesuaikan dari margin-left ke left relatif ke .door */
+}
+
+/* Tombol kembali opsional */
+.backButton {
+  margin-top: 40px; /* Jarak dari elemen pintu */
+  padding: 12px 25px;
+  background-color: #5be0b3;
+  color: #1c2127;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.backButton:hover {
+  background-color: #6eecc1;
+}
+
+/* Keyframes Animations (disalin langsung dari CSS Anda) */
+@keyframes leaf {
+  0% {
+    transform: scaleX(1);
+  }
+  5% {
+    transform: scaleX(0.2);
+  }
+  70% {
+    transform: scaleX(0.2);
+  }
+  75% {
+    transform: scaleX(1);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes eye {
+  0% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+  5% {
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(15px);
+  }
+  35% {
+    transform: translateX(15px);
+  }
+  40% {
+    transform: translateX(-15px);
+  }
+  60% {
+    transform: translateX(-15px);
+  }
+  65% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes flux {
+  0%,
+  100% {
+    text-shadow: 0 0 5px #00ffc6, 0 0 15px #00ffc6, 0 0 50px #00ffc6,
+      0 0 50px #00ffc6, 0 0 2px #b9ffe8, 2px 2px 3px #12e29c;
+    color: #4bffef;
+  }
+  50% {
+    text-shadow: 0 0 3px #00b58d, 0 0 7px #00b58d, 0 0 25px #00b58d,
+      0 0 25px #00b58d, 0 0 2px #00b58d, 2px 2px 3px #006a60;
+    color: #63d3ae;
+  }
+}
