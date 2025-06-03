@@ -1,5 +1,5 @@
 "use client";
-import { EmailIcon, PasswordIcon } from "@/assets/icons";
+import { PasswordIcon, UserIcon } from "@/assets/icons";
 import Link from "next/link";
 import React, { useState } from "react";
 import InputGroup from "../FormElements/InputGroup";
@@ -7,8 +7,8 @@ import { Checkbox } from "../FormElements/checkbox";
 
 export default function LoginWithPassword() {
   const [data, setData] = useState({
-    email: process.env.NEXT_PUBLIC_DEMO_USER_MAIL || "",
-    password: process.env.NEXT_PUBLIC_DEMO_USER_PASS || "",
+    username: "",
+    password: "",
     remember: false,
   });
 
@@ -35,21 +35,21 @@ export default function LoginWithPassword() {
   return (
     <form onSubmit={handleSubmit}>
       <InputGroup
-        type="email"
-        label="Email"
+        type="text"
+        label="username"
         className="mb-4 [&_input]:py-[15px]"
-        placeholder="Enter your email"
-        name="email"
+        placeholder="Masukan username Anda"
+        name="Username"
         handleChange={handleChange}
-        value={data.email}
-        icon={<EmailIcon />}
+        value={data.username}
+        icon={<UserIcon />}
       />
 
       <InputGroup
         type="password"
         label="Password"
         className="mb-5 [&_input]:py-[15px]"
-        placeholder="Enter your password"
+        placeholder="Masukan password Anda"
         name="password"
         handleChange={handleChange}
         value={data.password}
@@ -58,7 +58,7 @@ export default function LoginWithPassword() {
 
       <div className="mb-6 flex items-center justify-between gap-2 py-2 font-medium">
         <Checkbox
-          label="Remember me"
+          label="Ingat saya"
           name="remember"
           withIcon="check"
           minimal
@@ -75,7 +75,7 @@ export default function LoginWithPassword() {
           href="/auth/forgot-password"
           className="hover:text-primary dark:text-white dark:hover:text-primary"
         >
-          Forgot Password?
+          Lupa Password?
         </Link>
       </div>
 
@@ -84,7 +84,7 @@ export default function LoginWithPassword() {
           type="submit"
           className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary p-4 font-medium text-white transition hover:bg-opacity-90"
         >
-          Sign In
+          Masuk
           {loading && (
             <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-white border-t-transparent dark:border-primary dark:border-t-transparent" />
           )}
