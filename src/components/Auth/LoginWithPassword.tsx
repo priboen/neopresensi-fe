@@ -5,12 +5,7 @@ import React, { useEffect, useState } from "react";
 import InputGroup from "../FormElements/InputGroup";
 import { Checkbox } from "../FormElements/checkbox";
 import { useRouter, useSearchParams } from "next/navigation";
-
-const AUTH_TOKEN_COOKIE_NAME =
-  process.env.NEXT_PUBLIC_AUTH_TOKEN_COOKIE_NAME || "fallbackAuthCookieName";
-
-const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`;
-console.log("Mencoba fetch ke URL:", apiUrl);
+import { useAuthStore } from "@/lib/stores/use-auth-store";
 
 export default function LoginWithPassword() {
   const [data, setData] = useState({
@@ -18,107 +13,78 @@ export default function LoginWithPassword() {
     password: "",
     remember: false,
   });
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const AUTH_TOKEN_COOKIE_NAME =
+    process.env.NEXT_PUBLIC_AUTH_TOKEN_COOKIE_NAME || "fallbackAuthCookieName";
   useEffect(() => {
     const errorParam = searchParams.get("error");
-    if (errorParam) {
-      if (errorParam === "session_expired") {
-        setError("Sesi Anda telah berakhir. Silakan login kembali.");
-      } else if (errorParam === "config_error") {
-        setError("Terjadi kesalahan konfigurasi. Hubungi administrator.");
-      } else {
-        setError("Terjadi kesalahan. Silakan coba lagi.");
-      }
+    if (errorParam === "session_expired") {
+      setError("Sesi Anda telah berakhir. Silakan login kembali.");
+    } else if (errorParam === "config_error") {
+      setError("Terjadi kesalahan konfigurasi. Hubungi administrator.");
+    } else if (errorParam) {
+      setError("Terjadi kesalahan. Silakan coba lagi.");
     }
-  }, [searchParams, router]);
-
+  }, [searchParams]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setData({
-      ...data,
+    setData((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
-    });
+    }));
   };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
-    if (
-      !AUTH_TOKEN_COOKIE_NAME ||
-      AUTH_TOKEN_COOKIE_NAME === "fallbackAuthCookieName"
-    ) {
+    if (AUTH_TOKEN_COOKIE_NAME === "fallbackAuthCookieName") {
       console.error("Nama cookie autentikasi tidak dikonfigurasi di .env!");
       setError("Kesalahan konfigurasi pada sisi klien.");
       setLoading(false);
       return;
     }
-
-    if (
-      !AUTH_TOKEN_COOKIE_NAME ||
-      AUTH_TOKEN_COOKIE_NAME === "fallbackAuthCookieName"
-    ) {
-      console.error("Nama cookie autentikasi tidak dikonfigurasi di .env!");
-      setError("Kesalahan konfigurasi pada sisi klien.");
-      setLoading(false);
-      return;
-    }
-
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             username: data.username,
             password: data.password,
           }),
         }
       );
-      console.log();
-      console.log(data.username, data.password);
-
-      const responseData = await response.json();
-
-      if (!response.ok || responseData.statusCode >= 400) {
+      const resJson = await response.json();
+      if (!response.ok || resJson.statusCode >= 400) {
         throw new Error(
-          responseData.message ||
-            "Login gagal. Periksa kembali username dan password Anda."
+          resJson.message ||
+            "Login gagal. Periksa kembali username/password Anda."
         );
       }
-
-      const token = responseData.data?.token;
+      const { user, token } = resJson.data || {};
       if (!token) {
         throw new Error(
           "Login berhasil tetapi token tidak diterima dari server."
         );
       }
-
       const expiryDate = new Date();
-      if (data.remember) {
-        expiryDate.setDate(expiryDate.getDate() + 7);
-      } else {
-        expiryDate.setHours(expiryDate.getHours() + 1);
-      }
+      data.remember
+        ? expiryDate.setDate(expiryDate.getDate() + 7)
+        : expiryDate.setHours(expiryDate.getHours() + 1);
       document.cookie = `${AUTH_TOKEN_COOKIE_NAME}=${token}; path=/; expires=${expiryDate.toUTCString()}; SameSite=Lax${
         process.env.NODE_ENV === "production" ? "; Secure" : ""
       }`;
-
-      const queryParams = new URLSearchParams(window.location.search);
-      const redirectedFrom = queryParams.get("redirectedFrom") || "/";
+      useAuthStore.getState().login({ user, token });
+      const redirectedFrom =
+        new URLSearchParams(window.location.search).get("redirectedFrom") ||
+        "/dashboard";
       router.push(redirectedFrom);
       router.refresh();
     } catch (err: any) {
-      console.error("Login error:", err);
       setError(err.message || "Terjadi kesalahan tak terduga.");
     } finally {
       setLoading(false);
