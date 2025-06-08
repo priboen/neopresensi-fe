@@ -10,39 +10,40 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { LogOutIcon, SettingsIcon, UserIcon } from "./icons";
+import { LogOutIcon, UserIcon } from "./icons";
+import { useAuthStore } from "@/lib/stores/use-auth-store";
+import { deleteCookie } from "cookies-next";
 
 export function UserInfo() {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, logout } = useAuthStore();
 
-  const USER = {
-    name: "John Smith",
-    email: "johnson@nextadmin.com",
-    img: "/images/user/user-03.png",
-  };
+  if (!user) {
+    return null;
+  }
 
   return (
     <Dropdown isOpen={isOpen} setIsOpen={setIsOpen}>
       <DropdownTrigger className="rounded align-middle outline-none ring-primary ring-offset-2 focus-visible:ring-1 dark:ring-offset-gray-dark">
-        <span className="sr-only">My Account</span>
+        <span className="sr-only">Akun Saya</span>
 
         <figure className="flex items-center gap-3">
           <Image
-            src={USER.img}
-            className="size-12"
-            alt={`Avatar of ${USER.name}`}
+            src={user.photo_url}
+            className="size-12 rounded-full object-cover"
+            alt={`Avatar of ${user.name}`}
             role="presentation"
             width={200}
             height={200}
           />
           <figcaption className="flex items-center gap-1 font-medium text-dark dark:text-dark-6 max-[1024px]:sr-only">
-            <span>{USER.name}</span>
+            <span>{user.name}</span>
 
             <ChevronUpIcon
               aria-hidden
               className={cn(
                 "rotate-180 transition-transform",
-                isOpen && "rotate-0",
+                isOpen && "rotate-0"
               )}
               strokeWidth={1.5}
             />
@@ -58,9 +59,9 @@ export function UserInfo() {
 
         <figure className="flex items-center gap-2.5 px-5 py-3.5">
           <Image
-            src={USER.img}
-            className="size-12"
-            alt={`Avatar for ${USER.name}`}
+            src={user.photo_url}
+            className="rounded-full object-cover size-12"
+            alt={`Avatar for ${user.name}`}
             role="presentation"
             width={200}
             height={200}
@@ -68,10 +69,10 @@ export function UserInfo() {
 
           <figcaption className="space-y-1 text-base font-medium">
             <div className="mb-2 leading-none text-dark dark:text-white">
-              {USER.name}
+              {user.name}
             </div>
 
-            <div className="leading-none text-gray-6">{USER.email}</div>
+            <div className="leading-none text-gray-6">{user.email}</div>
           </figcaption>
         </figure>
 
@@ -88,7 +89,7 @@ export function UserInfo() {
             <span className="mr-auto text-base font-medium">View profile</span>
           </Link>
 
-          <Link
+          {/* <Link
             href={"/pages/settings"}
             onClick={() => setIsOpen(false)}
             className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-[9px] hover:bg-gray-2 hover:text-dark dark:hover:bg-dark-3 dark:hover:text-white"
@@ -98,15 +99,22 @@ export function UserInfo() {
             <span className="mr-auto text-base font-medium">
               Account Settings
             </span>
-          </Link>
+          </Link> */}
         </div>
 
-        <hr className="border-[#E8E8E8] dark:border-dark-3" />
+        {/* <hr className="border-[#E8E8E8] dark:border-dark-3" /> */}
 
         <div className="p-2 text-base text-[#4B5563] dark:text-dark-6">
           <button
             className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-[9px] hover:bg-gray-2 hover:text-dark dark:hover:bg-dark-3 dark:hover:text-white"
-            onClick={() => setIsOpen(false)}
+            onClick={() => {
+              setIsOpen(false);
+              logout();
+              deleteCookie(
+                process.env.NEXT_PUBLIC_AUTH_TOKEN_COOKIE_NAME ?? "authToken"
+              );
+              location.href = "/login";
+            }}
           >
             <LogOutIcon />
 
