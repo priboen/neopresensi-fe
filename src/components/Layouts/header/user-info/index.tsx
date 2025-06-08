@@ -29,7 +29,7 @@ export function UserInfo() {
 
         <figure className="flex items-center gap-3">
           <Image
-            src={user.photo_url}
+            src={user.photo_url ?? "/images/avatar.jpg"}
             className="size-12 rounded-full object-cover"
             alt={`Avatar of ${user.name}`}
             role="presentation"
@@ -59,7 +59,7 @@ export function UserInfo() {
 
         <figure className="flex items-center gap-2.5 px-5 py-3.5">
           <Image
-            src={user.photo_url}
+            src={user.photo_url ?? "/images/avatar.jpg"}
             className="rounded-full object-cover size-12"
             alt={`Avatar for ${user.name}`}
             role="presentation"
