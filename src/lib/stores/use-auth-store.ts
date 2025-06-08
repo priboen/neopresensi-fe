@@ -1,35 +1,24 @@
-import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
-
-type User = {
-  uuid: string
-  name: string
-  username: string
-  email: string
-  role: string
-  face_embedding: string | null
-  photo_url: string
-  createdAt: string
-  updatedAt: string
-}
+import { AuthUser } from "@/models/auth-user.model";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 type AuthState = {
-  user: User | null
-  token: string | null
-  login: (data: { user: User; token: string }) => void
-  logout: () => void
-}
+  user: AuthUser | null;
+  token: string | null;
+  login: (data: { user: AuthUser; token: string }) => void;
+  logout: () => void;
+};
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
       token: null,
-      login: ({ user, token }) => set({ user, token }),
+      login: ({ user, token }) => set({ user: AuthUser.fromJson(user), token }),
       logout: () => set({ user: null, token: null }),
     }),
     {
-      name: 'auth-storage',
+      name: "auth-storage",
     }
   )
-)
+);
