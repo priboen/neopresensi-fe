@@ -42,7 +42,7 @@ export const NAV_DATA = [
           },
           {
             title: "Setting CCTV",
-            url: "/cctv/streaming",
+            url: "/cctv/setting",
           },
         ],
       },

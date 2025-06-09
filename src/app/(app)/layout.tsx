@@ -1,6 +1,7 @@
 import { Sidebar } from "@/components/Layouts/sidebar";
 import { Header } from "@/components/Layouts/header";
 import type { PropsWithChildren } from "react";
+import { Toaster } from "react-hot-toast";
 
 export default function AppLayout({ children }: PropsWithChildren) {
   return (
@@ -12,6 +13,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
           {children}
         </main>
       </div>
+      <Toaster position="top-right" toastOptions={{ duration: 4000 }} />
     </div>
   );
 }

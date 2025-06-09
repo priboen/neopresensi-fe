@@ -27,6 +27,7 @@ type CustomTableProps<T> = {
   rowKey: keyof T | ((row: T, index: number) => string | number);
   renderActions?: (row: T) => React.ReactNode;
   className?: string;
+  headerExtras?: React.ReactNode;
 };
 
 export function CustomTable<T>({
@@ -37,6 +38,7 @@ export function CustomTable<T>({
   rowKey,
   className,
   renderActions,
+  headerExtras,
 }: CustomTableProps<T>) {
   return (
     <div
@@ -45,9 +47,14 @@ export function CustomTable<T>({
         className
       )}
     >
-      <h2 className="mb-4 text-body-2xlg font-bold text-dark dark:text-white">
-        {title}
-      </h2>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+        <h2 className="text-body-2xlg font-bold text-dark dark:text-white">
+          {title}
+        </h2>
+        {headerExtras && (
+          <div className="flex items-center gap-2">{headerExtras}</div>
+        )}
+      </div>
 
       <Table>
         <TableHeader>

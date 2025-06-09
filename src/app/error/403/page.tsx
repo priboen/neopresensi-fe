@@ -78,7 +78,7 @@ export default function ForbiddenPage() {
 
       {/* Container untuk tombol aksi */}
       <div className={styles.actionsContainer}>
-        <Link href="/" className={styles.actionButton}>
+        <Link href="/dashboard" className={styles.actionButton}>
           Kembali ke Halaman Utama
         </Link>
         <button
