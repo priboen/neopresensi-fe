@@ -20,6 +20,10 @@ export default function UserTable({ users, onRefresh }: Props) {
     console.log("🗑 Delete user with UUID:", uuid);
   };
 
+    const sortedUsers = [...users].sort((a, b) =>
+    a.name.localeCompare(b.name, 'id', { sensitivity: 'base' })
+  )
+
   return (
     <>
       <AddUserDialog
@@ -31,8 +35,8 @@ export default function UserTable({ users, onRefresh }: Props) {
         }}
       />
       <CustomTable<AppUser>
-        title="Data Pengguna"
-        data={users}
+        title="Data Akun Guru dan Staff"
+        data={sortedUsers}
         rowKey={(user) => user.uuid}
         logoAccessor="photo_url"
         columns={[

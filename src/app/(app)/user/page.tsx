@@ -25,11 +25,11 @@ export default function UserPage() {
 
   return (
     <>
-      <Breadcrumb pageName="Pengguna" />
+      <Breadcrumb pageName="Guru dan Staff" />
       <div className="space-y-10">
         {!users ? (
           <SkeletonTable
-            title="Data Pengguna"
+            title="Data Akun Guru dan Staff"
             rowCount={5}
             columns={[
               { label: "Photo", align: "left" },
