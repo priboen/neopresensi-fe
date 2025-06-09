@@ -34,7 +34,7 @@ const translateError = (message: string): string => {
       "Password minimal terdiri dari 6 karakter",
     "password should not be empty": "Password tidak boleh kosong",
     "password must be a string": "Password harus berupa teks",
-    "Username or email already exists":"Username atau email sudah terdaftar",
+    "Username or email already exists": "Username atau email sudah terdaftar",
   };
 
   return translations[message] || message;
@@ -81,6 +81,7 @@ export function UserForm({ onSuccess }: UserFormProps) {
             ? "Guru berhasil didaftarkan"
             : translateError(json.message)
         );
+        onSuccess?.();
       } else if (res.status === 400 && Array.isArray(json.message)) {
         const translated = json.message.map(translateError).join(", ");
         toast.error(translated);

@@ -5,15 +5,15 @@ import Link from "next/link";
 import { EditIcon, PreviewIcon } from "./icons";
 import { SearchIcon, TrashIcon } from "@/assets/icons";
 import { useState } from "react";
-import { UserForm } from "@/app/(app)/user/_components/user-form";
 import { AddUserDialog } from "../Dialog/AddUserDialog";
 import { Button } from "../ui/button";
 
 type Props = {
   users: AppUser[];
+  onRefresh: () => void;
 };
 
-export default function UserTable({ users }: Props) {
+export default function UserTable({ users, onRefresh }: Props) {
   const [openDialog, setOpenDialog] = useState(false);
 
   const handleDelete = (uuid: string) => {
@@ -22,7 +22,14 @@ export default function UserTable({ users }: Props) {
 
   return (
     <>
-      <AddUserDialog open={openDialog} onClose={() => setOpenDialog(false)} />
+      <AddUserDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        onSuccess={() => {
+          setOpenDialog(false);
+          onRefresh();
+        }}
+      />
       <CustomTable<AppUser>
         title="Data Pengguna"
         data={users}

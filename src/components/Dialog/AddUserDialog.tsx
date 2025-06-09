@@ -8,14 +8,15 @@ import {
   Transition,
   TransitionChild,
 } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 
 type Props = {
   open: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 };
 
-export function AddUserDialog({ open, onClose }: Props) {
+export function AddUserDialog({ open, onClose, onSuccess }: Props) {
   return (
     <>
       <Transition show={open} as={Fragment}>
@@ -31,7 +32,6 @@ export function AddUserDialog({ open, onClose }: Props) {
           >
             <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" />
           </TransitionChild>
-
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4">
               <TransitionChild
@@ -50,7 +50,12 @@ export function AddUserDialog({ open, onClose }: Props) {
                   >
                     Tambah Guru
                   </DialogTitle>
-                  <UserForm />
+                  <UserForm
+                    onSuccess={() => {
+                      onClose();
+                      onSuccess?.();
+                    }}
+                  />
                 </DialogPanel>
               </TransitionChild>
             </div>
