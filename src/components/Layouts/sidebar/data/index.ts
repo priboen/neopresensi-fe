@@ -22,7 +22,7 @@ export const NAV_DATA = [
         ],
       },
       {
-        title: "Pengguna",
+        title: "Guru dan Staff",
         url: "/user",
         icon: Icons.User,
         items: [],
