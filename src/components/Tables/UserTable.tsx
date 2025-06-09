@@ -7,6 +7,7 @@ import { SearchIcon, TrashIcon } from "@/assets/icons";
 import { useState } from "react";
 import { AddUserDialog } from "../Dialog/AddUserDialog";
 import { Button } from "../ui/button";
+import { DeleteUserDialog } from "../Dialog/DeleteUserDialog";
 
 type Props = {
   users: AppUser[];
@@ -15,14 +16,17 @@ type Props = {
 
 export default function UserTable({ users, onRefresh }: Props) {
   const [openDialog, setOpenDialog] = useState(false);
+  const [selectedUserUuid, setSelectedUserUuid] = useState<string | null>(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-  const handleDelete = (uuid: string) => {
-    console.log("🗑 Delete user with UUID:", uuid);
+  const handleDeleteClick = (uuid: string) => {
+    setSelectedUserUuid(uuid);
+    setOpenDeleteDialog(true);
   };
 
-    const sortedUsers = [...users].sort((a, b) =>
-    a.name.localeCompare(b.name, 'id', { sensitivity: 'base' })
-  )
+  const sortedUsers = [...users].sort((a, b) =>
+    a.name.localeCompare(b.name, "id", { sensitivity: "base" })
+  );
 
   return (
     <>
@@ -33,6 +37,12 @@ export default function UserTable({ users, onRefresh }: Props) {
           setOpenDialog(false);
           onRefresh();
         }}
+      />
+      <DeleteUserDialog
+        open={openDeleteDialog}
+        onClose={() => setOpenDeleteDialog(false)}
+        userUuid={selectedUserUuid}
+        onSuccess={onRefresh}
       />
       <CustomTable<AppUser>
         title="Data Akun Guru dan Staff"
@@ -58,7 +68,7 @@ export default function UserTable({ users, onRefresh }: Props) {
               <EditIcon className="h-5 w-5 " />
             </Link>
             <button
-              onClick={() => handleDelete(user.uuid)}
+              onClick={() => handleDeleteClick(user.uuid)}
               className="hover:text-primary"
             >
               <span className="sr-only">Delete</span>
