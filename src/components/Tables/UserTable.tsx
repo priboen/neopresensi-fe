@@ -8,6 +8,7 @@ import { useState } from "react";
 import { AddUserDialog } from "../Dialog/AddUserDialog";
 import { Button } from "../ui/button";
 import { DeleteUserDialog } from "../Dialog/DeleteUserDialog";
+import { UpdateUserDialog } from "../Dialog/UpdateUserDialog";
 
 type Props = {
   users: AppUser[];
@@ -17,6 +18,9 @@ type Props = {
 export default function UserTable({ users, onRefresh }: Props) {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedUserUuid, setSelectedUserUuid] = useState<string | null>(null);
+  const [selectedEditUser, setSelectedEditUser] = useState<AppUser | null>(
+    null
+  );
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const handleDeleteClick = (uuid: string) => {
@@ -38,6 +42,12 @@ export default function UserTable({ users, onRefresh }: Props) {
           onRefresh();
         }}
       />
+      <UpdateUserDialog
+        open={selectedEditUser !== null}
+        user={selectedEditUser}
+        onClose={() => setSelectedEditUser(null)}
+        onSuccess={onRefresh}
+      />
       <DeleteUserDialog
         open={openDeleteDialog}
         onClose={() => setOpenDeleteDialog(false)}
@@ -51,22 +61,19 @@ export default function UserTable({ users, onRefresh }: Props) {
         logoAccessor="photo_url"
         columns={[
           { label: "Nama", accessor: "name", align: "left" },
+          {label: "Email", accessor: "email" },
           { label: "Username", accessor: "username" },
           { label: "Role", accessor: "role" },
         ]}
         renderActions={(user) => (
           <div className="flex items-center justify-end gap-3.5">
-            <Link href={`/user/${user.uuid}`} className="hover:text-primary">
-              <span className="sr-only">Detail</span>
-              <PreviewIcon className="h-5 w-5" />
-            </Link>
-            <Link
-              href={`/user/edit/${user.uuid}`}
+            <button
+              onClick={() => setSelectedEditUser(user)}
               className="hover:text-primary"
             >
               <span className="sr-only">Edit</span>
-              <EditIcon className="h-5 w-5 " />
-            </Link>
+              <EditIcon className="h-5 w-5" />
+            </button>
             <button
               onClick={() => handleDeleteClick(user.uuid)}
               className="hover:text-primary"

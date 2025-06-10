@@ -2,7 +2,7 @@
 
 import { ChevronUpIcon } from "@/assets/icons";
 import { cn } from "@/lib/utils";
-import { useId, useState } from "react";
+import { useId, useState, useEffect } from "react";
 
 type PropsType = {
   name: string;
@@ -12,10 +12,9 @@ type PropsType = {
   onChange?: (value: string) => void;
   prefixIcon?: React.ReactNode;
   className?: string;
-} & (
-  | { placeholder?: string; defaultValue: string }
-  | { placeholder: string; defaultValue?: string }
-);
+  placeholder?: string;
+  defaultValue?: string;
+};
 
 export function Select({
   name,
@@ -24,19 +23,29 @@ export function Select({
   value,
   onChange,
   defaultValue,
-  placeholder,
+  placeholder = "Pilih opsi",
   prefixIcon,
   className,
 }: PropsType) {
   const id = useId();
+  const isControlled = value !== undefined;
 
-  const [isOptionSelected, setIsOptionSelected] = useState(
-    Boolean(defaultValue || value)
-  );
+  const [internalValue, setInternalValue] = useState(defaultValue ?? "");
+
+  const currentValue = isControlled ? value : internalValue;
+
+  useEffect(() => {
+    if (!isControlled && defaultValue) {
+      setInternalValue(defaultValue);
+    }
+  }, [defaultValue]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setIsOptionSelected(true);
-    onChange?.(e.target.value);
+    const val = e.target.value;
+    if (!isControlled) {
+      setInternalValue(val);
+    }
+    onChange?.(val);
   };
 
   return (
@@ -58,12 +67,11 @@ export function Select({
         <select
           id={id}
           name={name}
-          value={value}
-          defaultValue={defaultValue || ""}
+          value={currentValue}
           onChange={handleChange}
           className={cn(
             "w-full appearance-none rounded-lg border border-stroke bg-transparent px-5.5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary [&>option]:text-dark-5 dark:[&>option]:text-dark-6",
-            isOptionSelected && "text-dark dark:text-white",
+            currentValue && "text-dark dark:text-white",
             prefixIcon && "pl-11.5"
           )}
         >

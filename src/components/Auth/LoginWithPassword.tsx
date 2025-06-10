@@ -99,7 +99,7 @@ export default function LoginWithPassword() {
         className="mb-4 [&_input]:py-[15px]"
         placeholder="Masukan username Anda"
         name="username"
-        handleChange={handleChange}
+        onChange={handleChange}
         value={data.username}
         icon={<UserIcon />}
         disabled={loading}
@@ -111,7 +111,7 @@ export default function LoginWithPassword() {
         className="mb-5 [&_input]:py-[15px]"
         placeholder="Masukan password Anda"
         name="password"
-        handleChange={handleChange}
+        onChange={handleChange}
         value={data.password}
         icon={<PasswordIcon />}
         disabled={loading}
