@@ -57,7 +57,7 @@ export function Sidebar() {
         className={cn(
           "max-w-[290px] overflow-hidden border-r border-gray-200 bg-white transition-[width] duration-200 ease-linear dark:border-gray-800 dark:bg-gray-dark",
           isMobile ? "fixed bottom-0 top-0 z-50" : "sticky top-0 h-screen",
-          isOpen ? "w-full" : "w-0",
+          isOpen ? "w-full" : "w-0"
         )}
         aria-label="Main navigation"
         aria-hidden={!isOpen}
@@ -101,7 +101,7 @@ export function Sidebar() {
                           <div>
                             <MenuItem
                               isActive={item.items.some(
-                                ({ url }) => url === pathname,
+                                ({ url }) => url === pathname
                               )}
                               onClick={() => toggleExpanded(item.title)}
                             >
@@ -116,7 +116,7 @@ export function Sidebar() {
                                 className={cn(
                                   "ml-auto rotate-180 transition-transform duration-200",
                                   expandedItems.includes(item.title) &&
-                                    "rotate-0",
+                                    "rotate-0"
                                 )}
                                 aria-hidden="true"
                               />
