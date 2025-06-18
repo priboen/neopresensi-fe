@@ -78,11 +78,17 @@ export default function SchedulePage() {
     {
       name: "teacher_id",
       type: "select",
-      label: "Guru - Mapel -Kelas",
+      label: "Mata Pelajaran - Kelas - Guru",
       fetchEndpoint: "/teacher-assignments",
-      fetchField: "userName",
       placeholder: "Pilih Mata Pelajaran",
       required: true,
+      mapOptions: (data: any[]) =>
+        data.map((item) => ({
+          value: item.uuid,
+          label: `${item.subject?.name || "-"} - ${item.classes?.grade || ""}${
+            item.classes?.group?.name || ""
+          } - ${item.user?.name || "-"}`,
+        })),
     },
   ];
 

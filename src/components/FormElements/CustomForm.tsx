@@ -12,6 +12,7 @@ type FormField = {
   options?: { value: string; label: string }[];
   fetchEndpoint?: string;
   fetchField?: string;
+  mapOptions?: (data: any[]) => { value: string; label: string }[];
   placeholder?: string;
   label?: string;
   required?: boolean;
@@ -50,7 +51,7 @@ export function CustomForm({
       const newIsFetching: { [key: string]: boolean } = {};
 
       for (const field of formData) {
-        if (field.fetchEndpoint && field.fetchField) {
+        if (field.fetchEndpoint) {
           const fullUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${field.fetchEndpoint}`;
           newIsFetching[field.name] = true;
           try {
@@ -62,14 +63,12 @@ export function CustomForm({
             }
             const json = await response.json();
             if (json.statusCode === 200 && Array.isArray(json.data)) {
-              newFetchedOptions[field.name] = json.data
-                .map((item: any) => ({
-                  value: item.uuid,
-                  label: item[field.fetchField!],
-                }))
-                .sort((a: { label: string }, b: { label: string }) =>
-                  a.label.localeCompare(b.label)
-                );
+              newFetchedOptions[field.name] = field.mapOptions
+                ? field.mapOptions(json.data)
+                : json.data.map((item: any) => ({
+                    value: item.uuid,
+                    label: item[field.fetchField!],
+                  }));
             } else {
               throw new Error("Invalid response format");
             }
