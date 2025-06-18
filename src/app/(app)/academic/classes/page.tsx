@@ -43,6 +43,26 @@ export default function ClassesPage() {
   const handleCloseAddDialog = () => {
     setOpenAddDialog(false);
   };
+
+  const formData = [
+    {
+      name: "grade",
+      type: "number",
+      label: "Tingkat Kelas",
+      placeholder: "Masukkan tingkat kelas (mis. 7)",
+      required: true,
+    },
+    {
+      name: "group_id",
+      type: "select",
+      label: "Kelompok Kelas",
+      fetchEndpoint: "/class-group",
+      fetchField: "name",
+      placeholder: "Pilih kelompok kelas",
+      required: true,
+    },
+  ];
+
   useEffect(() => {
     fetchClasses();
   }, []);
@@ -82,15 +102,10 @@ export default function ClassesPage() {
               open={openAddDialog}
               onClose={handleCloseAddDialog}
               formTitle="Tambah Mata Pelajaran"
-              formData={[
-                {
-                  name: "name",
-                  type: "text",
-                  label: "Nama Mata Pelajaran",
-                  required: true,
-                },
-              ]}
+              formData={formData}
               endpoint="/classes"
+              relatedEndpoint={undefined}
+              relatedField={undefined}
               onSuccess={() => {
                 fetchClasses();
                 handleCloseAddDialog();
