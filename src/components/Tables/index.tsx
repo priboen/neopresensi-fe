@@ -8,13 +8,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { formatDateIndo } from "@/lib/format-date";
 import { compactFormat, standardFormat } from "@/lib/format-number";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 type ColumnConfig<T> = {
   label: string;
-  accessor: keyof T;
+  accessor: keyof T | ((row: T) => React.ReactNode);
   align?: "left" | "center" | "right";
   format?: "currency" | "number" | "percent";
 };
@@ -85,31 +86,51 @@ export function CustomTable<T>({
               className="text-center text-base font-medium text-dark dark:text-white"
             >
               {columns.map((col, idx) => {
-                const raw = row[col.accessor];
-                let content: React.ReactNode = raw as string;
+                let content: React.ReactNode;
+                if (typeof col.accessor === "function") {
+                  content = col.accessor(row);
+                } else {
+                  const raw = row[col.accessor];
+                  content = raw as string;
 
-                if (col.accessor === "role" && typeof raw === "string") {
-                  content =
-                    raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
-                }
+                  if (typeof raw === "string") {
+                    if (col.accessor === "role") {
+                      content =
+                        raw.charAt(0).toUpperCase() +
+                        raw.slice(1).toLowerCase();
+                    }
 
-                // handle format
-                if (typeof raw === "number") {
-                  if (col.format === "currency") {
-                    content = `$${standardFormat(raw)}`;
-                  } else if (col.format === "number") {
-                    content = compactFormat(raw);
-                  } else if (col.format === "percent") {
-                    content = `${raw}%`;
+                    if (col.accessor === "userName") {
+                      content = raw
+                        .split(" ")
+                        .map(
+                          (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                        )
+                        .join(" ");
+                    }
+
+                    if (
+                      col.accessor === "startDate" ||
+                      col.accessor === "endDate"
+                    ) {
+                      content = formatDateIndo(raw);
+                    }
+                  }
+
+                  if (typeof raw === "number") {
+                    if (col.format === "currency") {
+                      content = `$${standardFormat(raw)}`;
+                    } else if (col.format === "number") {
+                      content = compactFormat(raw);
+                    } else if (col.format === "percent") {
+                      content = `${raw}%`;
+                    }
                   }
                 }
 
-                // first cell with logo
                 if (idx === 0 && logoAccessor) {
                   const logoUrl =
-                    row[logoAccessor] &&
-                    typeof row[logoAccessor] === "string" &&
-                    row[logoAccessor]
+                    row[logoAccessor] && typeof row[logoAccessor] === "string"
                       ? (row[logoAccessor] as string)
                       : "/images/avatar.jpg";
                   return (
