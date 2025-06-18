@@ -14,6 +14,7 @@ type PropsType = {
   className?: string;
   placeholder?: string;
   defaultValue?: string;
+  disabled?: boolean;
 };
 
 export function Select({
@@ -26,6 +27,7 @@ export function Select({
   placeholder = "Pilih opsi",
   prefixIcon,
   className,
+  disabled,
 }: PropsType) {
   const id = useId();
   const isControlled = value !== undefined;
@@ -69,10 +71,12 @@ export function Select({
           name={name}
           value={currentValue}
           onChange={handleChange}
+          disabled={disabled}
           className={cn(
             "w-full appearance-none rounded-lg border border-stroke bg-transparent px-5.5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary [&>option]:text-dark-5 dark:[&>option]:text-dark-6",
             currentValue && "text-dark dark:text-white",
-            prefixIcon && "pl-11.5"
+            prefixIcon && "pl-11.5",
+            disabled && "opacity-60 cursor-not-allowed"
           )}
         >
           {placeholder && (
