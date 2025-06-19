@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import toast from "react-hot-toast";
 import InputGroup from "@/components/FormElements/InputGroup";
 import { Select } from "@/components/FormElements/select";
@@ -24,6 +24,8 @@ type CustomFormProps = {
   onClose: () => void;
   endpoint: string;
   additionalData?: { [key: string]: any };
+  initialData?: { [key: string]: any };
+  method?: "POST" | "PATCH" | "PUT";
 };
 
 export function CustomForm({
@@ -32,12 +34,32 @@ export function CustomForm({
   onClose,
   endpoint,
   additionalData,
+  initialData,
+  method = "POST",
 }: CustomFormProps) {
   const [loading, setLoading] = useState(false);
   const [fetchedOptions, setFetchedOptions] = useState<{
     [key: string]: { value: string; label: string }[];
   }>({});
   const [isFetching, setIsFetching] = useState<{ [key: string]: boolean }>({});
+  const [formValues, setFormValues] = useState<{ [key: string]: any }>({});
+
+  useEffect(() => {
+    if (initialData) {
+      const initializedValues: { [key: string]: any } = {};
+      formData.forEach((field) => {
+        initializedValues[field.name] = initialData[field.name] || "";
+      });
+      setFormValues(initializedValues);
+    }
+  }, [initialData, formData]);
+
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    name: string
+  ) => {
+    setFormValues({ ...formValues, [name]: e.target.value });
+  };
 
   useEffect(() => {
     if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
@@ -124,11 +146,11 @@ export function CustomForm({
     try {
       const fullUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}${endpoint}`;
       const res = await authFetch(fullUrl, {
-        method: "POST",
+        method,
         body: JSON.stringify(formDataObj),
       });
       const json = await res.json();
-      if (json.statusCode === 201) {
+      if (json.statusCode === 201 || json.statusCode === 200) {
         toast.success("Data berhasil disimpan!");
         onSuccess?.();
         onClose();
@@ -163,6 +185,12 @@ export function CustomForm({
                   : field.placeholder || `Pilih ${field.name}`
               }
               disabled={isFetching[field.name]}
+              onChange={(eOrValue) =>
+                typeof eOrValue === "string"
+                  ? setFormValues({ ...formValues, [field.name]: eOrValue })
+                  : handleInputChange(eOrValue, field.name)
+              }
+              value={formValues[field.name] || ""}
             />
           );
         }
@@ -174,6 +202,8 @@ export function CustomForm({
             name={field.name}
             type={field.type}
             placeholder={field.placeholder || `Masukkan ${field.name}`}
+            onChange={(e) => handleInputChange(e, field.name)}
+            value={formValues[field.name] || ""}
           />
         );
       })}

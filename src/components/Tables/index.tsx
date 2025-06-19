@@ -95,9 +95,21 @@ export function CustomTable<T>({
 
                   if (typeof raw === "string") {
                     if (col.accessor === "role") {
-                      content =
-                        raw.charAt(0).toUpperCase() +
-                        raw.slice(1).toLowerCase();
+                      if(raw === "teacher") {
+                        content = "Guru";
+                      } else {
+                        content = "Staff";
+                      }
+                    }
+
+                    if (col.accessor === "status") {
+                      if (raw === "approved") {
+                        content = "Disetujui";
+                      } else if (raw === "rejected") {
+                        content = "Ditolak";
+                      } else {
+                        content = "Menunggu";
+                      }
                     }
 
                     if (col.accessor === "userName") {

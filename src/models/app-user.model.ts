@@ -5,7 +5,7 @@ export class AppUser {
     public username: string,
     public email: string,
     public role: string,
-    public photo_url: string | null
+    public photoUrl: string | null
   ) {}
 
   static fromJson(data: any): AppUser {

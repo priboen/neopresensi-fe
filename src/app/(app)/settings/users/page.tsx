@@ -1,10 +1,10 @@
 "use client";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { SkeletonTable } from "@/components/Tables/skeleton";
-import UserTable from "@/components/Tables/UserTable";
 import { AppUser } from "@/models/app-user.model";
 import { authFetch } from "@/utils/auth-fetch";
 import { useEffect, useState } from "react";
+import UserTable from "./_components/UserTable";
 
 const API_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL}/users`;
 
